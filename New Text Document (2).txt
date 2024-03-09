@@ -1,0 +1,166 @@
+If you were to solve the above problem, take a case of any kind of user on your platform and
+define its end-to-end journey (step-by-step).
+
+
+
+
+
+
+
+2. Modelling:
+   Lay out the structure of your data models that you will be needing to solve for the above
+   problem and journey. Define constraints, relationships and data types as well.
+
+->
+
+User:
+
+Attributes:
+ID (Primary Key)
+Name
+Email
+Password
+Constraints:
+Name: String, max length: 100 characters
+Email: String, unique, max length: 255 characters
+Password: String, hashed for security
+Course:
+
+Attributes:
+ID (Primary Key)
+Name
+Description
+Price
+Category (e.g., Baking, Makeup, Handicrafts)
+Constraints:
+Name: String, max length: 255 characters
+Description: Text
+Price: Decimal, minimum value: 0
+Category: Enum or String, limited to predefined categories
+Instructor:
+
+Attributes:
+ID (Primary Key)
+Name
+Bio (Biography)
+Contact Information (Optional)
+Constraints:
+Name: String, max length: 100 characters
+Bio: Text
+Class:
+
+Attributes:
+ID (Primary Key)
+Course ID (Foreign Key)
+Instructor ID (Foreign Key)
+Date and Time
+Zoom Link
+Constraints:
+Date and Time: DateTime
+Zoom Link: String, max length: 255 characters
+Enrollment:
+
+Attributes:
+ID (Primary Key)
+Course ID (Foreign Key)
+User ID (Foreign Key)
+Payment ID (Foreign Key)
+Enrollment Date
+Constraints:
+Enrollment Date: DateTime
+Payment:
+
+Attributes:
+ID (Primary Key)
+Amount
+Payment Date
+User ID (Foreign Key)
+Constraints:
+Amount: Decimal, minimum value: 0
+Payment Date: DateTime
+Certificate:
+
+Attributes:
+ID (Primary Key)
+Course ID (Foreign Key)
+User ID (Foreign Key)
+Issue Date
+Constraints:
+Issue Date: DateTime
+Review:
+
+Attributes:
+ID (Primary Key)
+Course ID (Foreign Key)
+User ID (Foreign Key)
+Rating (out of 5)
+Comment (Optional)
+Review Date
+Constraints:
+Rating: Integer, range: 1 to 5
+Comment: Text, max length: 1000 characters
+Review Date: DateTime
+
+
+
+
+
+3. In this step, you will have to write down the queries that will be fired in each step to
+   implement the above journey into an application. This should include both read and CRUD
+   queries.
+
+
+
+1. Registration and Login:
+
+Create User:
+INSERT INTO User (name, email, password) VALUES (?, ?, ?)
+
+Retrieve User by Email:
+SELECT * FROM User WHERE email = ?
+
+
+
+2. Browsing Courses:
+
+Retrieve All Courses:
+SELECT * FROM Course
+
+
+3. Enrollment in a Course:
+
+Create Enrollment:
+INSERT INTO Enrollment (course_id, user_id, payment_id, enrollment_date) VALUES (?, ?, ?, ?)
+
+
+4. Retrieve Enrolled Courses for a User:
+SELECT * FROM Course WHERE id IN (SELECT course_id FROM Enrollment WHERE user_id = ?)
+
+
+5. Accessing Live Classes:
+
+Retrieve Classes for Enrolled Course:
+SELECT * FROM Class WHERE course_id = ? AND date_time >= NOW()
+
+
+6. Accessing Course Recordings:
+
+Retrieve Recorded Sessions for Enrolled Course:
+SELECT * FROM Class WHERE course_id = ? AND date_time < NOW()
+
+
+7. Certificate Download:
+
+Retrieve Certificate for Completed Course:
+SELECT * FROM Certificate WHERE course_id = ? AND user_id = ?
+
+
+8. Feedback and Reviews:
+
+Create Review:
+INSERT INTO Review (course_id, user_id, rating, comment, review_date) VALUES (?, ?, ?, ?, ?)
+
+
+9. Retrieve Reviews for a Course:
+SELECT * FROM Review WHERE course_id = ?
+
